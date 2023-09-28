@@ -1,0 +1,4 @@
+export const MICROSERVICES_TYPES = {
+	AUTH_MICROSERVICE: Symbol.for('AUTH'),
+	MEETUPS_MICROSERVICE: Symbol.for('MEETUPS'),
+};
