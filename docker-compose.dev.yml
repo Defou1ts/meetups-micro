@@ -9,10 +9,18 @@ services:
             context: .
             dockerfile: ./apps/gateway/Dockerfile
             target: development
+        x-develop:
+            watch:
+                - action: sync
+                  path: ./apps/gateway
+                  target: /app/apps/gateway
+                  ignore:
+                      - node_modules/
+                - action: rebuild
+                  path: package.json
         ports:
             - '${PORT}:${PORT}'
             - 9229:9229
-        command: ['yarn', 'start:dev']
         depends_on:
             - postgres
             - rabbit
@@ -25,10 +33,18 @@ services:
             context: .
             dockerfile: ./apps/auth/Dockerfile
             target: development
+        x-develop:
+            watch:
+                - action: sync
+                  path: ./apps/auth
+                  target: /app/apps/auth
+                  ignore:
+                      - node_modules/
+                - action: rebuild
+                  path: package.json
         ports:
             - 5002:5002
             - 9230:9229
-        command: ['yarn', 'start:dev']
         depends_on:
             - postgres
             - rabbit
@@ -41,10 +57,18 @@ services:
             context: .
             dockerfile: ./apps/meetups/Dockerfile
             target: development
+        x-develop:
+            watch:
+                - action: sync
+                  path: ./apps/meetups
+                  target: /app/apps/meetups
+                  ignore:
+                      - node_modules/
+                - action: rebuild
+                  path: package.json
         ports:
             - 5003:5003
             - 9231:9229
-        command: ['yarn', 'start:dev']
         depends_on:
             - postgres
             - rabbit
@@ -80,7 +104,7 @@ services:
         volumes:
             - esdata01:/usr/share/elasticsearch/data
         ports:
-            - ${ES_PORT}:9200
+            - ${ELASTIC_PORT}:${ELASTIC_PORT}
         environment:
             - node.name=es01
             - cluster.name=${CLUSTER_NAME}
