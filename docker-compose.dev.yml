@@ -1,0 +1,189 @@
+version: '3.0'
+
+services:
+    gateway-service:
+        container_name: gateway-dev
+        env_file:
+            - .env
+        build:
+            context: .
+            target: gateway-dev
+        volumes:
+            - ./apps/gateway:/app
+        ports:
+            - '${PORT}:${PORT}'
+            - 9229:9229
+        command: ['yarn', 'start:dev']
+        depends_on:
+            - postgres
+            - rabbit
+        restart: always
+    auth-service:
+        container_name: auth-dev
+        env_file:
+            - .env
+        build:
+            context: .
+            target: auth-dev
+        volumes:
+            - ./apps/auth:/app
+        ports:
+            - 5002:5002
+            - 9230:9229
+        command: ['yarn', 'start:dev']
+        depends_on:
+            - postgres
+            - rabbit
+        restart: always
+    meetups-service:
+        container_name: meetups-dev
+        env_file:
+            - .env
+        build:
+            context: .
+            target: meetups-dev
+        volumes:
+            - ./apps/meetups:/app
+        ports:
+            - 5003:5003
+            - 9231:9229
+        command: ['yarn', 'start:dev']
+        depends_on:
+            - postgres
+            - rabbit
+        restart: always
+    postgres:
+        container_name: postgres-dev
+        hostname: '${POSTGRES_HOST}'
+        env_file:
+            - .env
+        image: postgres:14
+        ports:
+            - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        restart: always
+    rabbit:
+        container_name: rabbitmq-dev
+        env_file:
+            - .env
+        hostname: '${RABBIT_MQ_HOST}'
+        image: lucifer8591/rabbitmq-server:3.7.17
+        ports:
+            - '${RABBIT_MQ_PORT}:${RABBIT_MQ_PORT}'
+            - '15672:15672'
+        volumes:
+            - rabbitmq:/var/lib/rabbitmq
+        restart: always
+
+    es01:
+        hostname: '${ELASTIC_HOST_FIRST_NODE}'
+        container_name: es01
+        image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+        volumes:
+            - esdata01:/usr/share/elasticsearch/data
+        ports:
+            - ${ES_PORT}:9200
+        environment:
+            - node.name=es01
+            - cluster.name=${CLUSTER_NAME}
+            - cluster.initial_master_nodes=es01,es02,es03
+            - discovery.seed_hosts=es02,es03
+            - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+            - bootstrap.memory_lock=true
+            - xpack.security.enabled=false
+            - xpack.security.http.ssl.enabled=false
+            - xpack.security.transport.ssl.enabled=false
+        mem_limit: ${MEM_LIMIT}
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+
+    es02:
+        hostname: '${ELASTIC_HOST_SECOND_NODE}'
+        container_name: es02
+        depends_on:
+            - es01
+        image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+        volumes:
+            - esdata02:/usr/share/elasticsearch/data
+        environment:
+            - node.name=es02
+            - cluster.name=${CLUSTER_NAME}
+            - cluster.initial_master_nodes=es01,es02,es03
+            - discovery.seed_hosts=es01,es03
+            - bootstrap.memory_lock=true
+            - xpack.security.enabled=false
+            - xpack.security.http.ssl.enabled=false
+            - xpack.security.transport.ssl.enabled=false
+        mem_limit: ${MEM_LIMIT}
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+
+    es03:
+        hostname: '${ELASTIC_HOST_THIRD_NODE}'
+        container_name: es03
+        depends_on:
+            - es02
+        image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+        volumes:
+            - esdata03:/usr/share/elasticsearch/data
+        environment:
+            - node.name=es03
+            - cluster.name=${CLUSTER_NAME}
+            - cluster.initial_master_nodes=es01,es02,es03
+            - discovery.seed_hosts=es01,es02
+            - bootstrap.memory_lock=true
+            - xpack.security.enabled=false
+            - xpack.security.http.ssl.enabled=false
+            - xpack.security.transport.ssl.enabled=false
+        mem_limit: ${MEM_LIMIT}
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+    kibana:
+        container_name: kibana
+        depends_on:
+            - es01
+            - es02
+            - es03
+        image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+        volumes:
+            - kibanadata:/usr/share/kibana/data
+        ports:
+            - ${KIBANA_PORT}:5601
+        environment:
+            - SERVERNAME=kibana
+            - ELASTICSEARCH_HOSTS=http://${ELASTIC_HOST_FIRST_NODE}:${ELASTIC_PORT}
+            - ELASTICSEARCH_USERNAME=${ELASTIC_USERNAME}
+            - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+        mem_limit: ${MEM_LIMIT}
+    logstash:
+        container_name: logstash
+        image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
+        env_file:
+            - .env
+        volumes:
+            - ./logstash-config.conf:/usr/share/logstash/pipeline/logstash.conf
+            - ./postgresql-connector.jar:/usr/share/logstash/postgresql-connector.jar
+        depends_on:
+            - postgres
+            - es01
+        environment:
+            - 'ES_HOST=http://es01:9200'
+        restart: always
+volumes:
+    pgdata:
+    rabbitmq:
+    esdata01:
+        driver: local
+    esdata02:
+        driver: local
+    esdata03:
+        driver: local
+    kibanadata:
+        driver: local
