@@ -7,12 +7,10 @@ services:
             - .env
         build:
             context: .
-            target: gateway
-        volumes:
-            - ./apps/gateway:/app
+            dockerfile: ./apps/gateway/Dockerfile
+            target: production
         ports:
             - '${PORT}:${PORT}'
-        command: ['yarn', 'start']
         depends_on:
             - postgres
             - rabbit
@@ -23,12 +21,10 @@ services:
             - .env
         build:
             context: .
-            target: auth
-        volumes:
-            - ./apps/auth:/app
+            dockerfile: ./apps/auth/Dockerfile
+            target: production
         ports:
             - 5002:5002
-        command: ['yarn', 'start']
         depends_on:
             - postgres
             - rabbit
@@ -39,12 +35,10 @@ services:
             - .env
         build:
             context: .
-            target: meetups
-        volumes:
-            - ./apps/meetups:/app
+            dockerfile: ./apps/meetups/Dockerfile
+            target: production
         ports:
             - 5003:5003
-        command: ['yarn', 'start']
         depends_on:
             - postgres
             - rabbit

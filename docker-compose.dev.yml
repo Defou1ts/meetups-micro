@@ -7,9 +7,8 @@ services:
             - .env
         build:
             context: .
-            target: gateway-dev
-        volumes:
-            - ./apps/gateway:/app
+            dockerfile: ./apps/gateway/Dockerfile
+            target: development
         ports:
             - '${PORT}:${PORT}'
             - 9229:9229
@@ -24,9 +23,8 @@ services:
             - .env
         build:
             context: .
-            target: auth-dev
-        volumes:
-            - ./apps/auth:/app
+            dockerfile: ./apps/auth/Dockerfile
+            target: development
         ports:
             - 5002:5002
             - 9230:9229
@@ -41,9 +39,8 @@ services:
             - .env
         build:
             context: .
-            target: meetups-dev
-        volumes:
-            - ./apps/meetups:/app
+            dockerfile: ./apps/meetups/Dockerfile
+            target: development
         ports:
             - 5003:5003
             - 9231:9229
