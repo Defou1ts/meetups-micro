@@ -25,26 +25,23 @@ services:
             - postgres
             - rabbit
         restart: always
-    auth-service:
-        container_name: auth-dev
+    users-service:
+        container_name: users-dev
         env_file:
             - .env
         build:
             context: .
-            dockerfile: ./apps/auth/Dockerfile
+            dockerfile: ./apps/users/Dockerfile
             target: development
         x-develop:
             watch:
                 - action: sync
-                  path: ./apps/auth
-                  target: /app/apps/auth
+                  path: ./apps/users
+                  target: /app/apps/users
                   ignore:
                       - node_modules/
                 - action: rebuild
                   path: package.json
-        ports:
-            - 5002:5002
-            - 9230:9229
         depends_on:
             - postgres
             - rabbit
@@ -66,9 +63,6 @@ services:
                       - node_modules/
                 - action: rebuild
                   path: package.json
-        ports:
-            - 5003:5003
-            - 9231:9229
         depends_on:
             - postgres
             - rabbit

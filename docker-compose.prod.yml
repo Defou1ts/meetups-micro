@@ -15,16 +15,15 @@ services:
             - postgres
             - rabbit
         restart: always
-    auth-service:
-        container_name: auth
+    users-service:
+        container_name: users
         env_file:
             - .env
         build:
             context: .
-            dockerfile: ./apps/auth/Dockerfile
+            dockerfile: ./apps/users/Dockerfile
             target: production
         ports:
-            - 5002:5002
         depends_on:
             - postgres
             - rabbit
@@ -37,8 +36,6 @@ services:
             context: .
             dockerfile: ./apps/meetups/Dockerfile
             target: production
-        ports:
-            - 5003:5003
         depends_on:
             - postgres
             - rabbit
