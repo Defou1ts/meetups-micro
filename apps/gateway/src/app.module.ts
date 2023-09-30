@@ -14,20 +14,27 @@ import { MICROSERVICES_TYPES } from './services.types';
 import { getClientsModuleRabbitMqProvider } from './helpers/getClientsModuleRabbitMqConnection';
 import { OauthModule } from './oauth/oauth.module';
 import { googleConfigRegister } from './config/google.config';
+import { encryptionConfigRegister } from './config/encryption.config';
 
 @Module({
 	imports: [
 		ClientsModule.registerAsync({
 			isGlobal: true,
 			clients: [
-				getClientsModuleRabbitMqProvider(MICROSERVICES_TYPES.AUTH_MICROSERVICE, 'auth_queue'),
+				getClientsModuleRabbitMqProvider(MICROSERVICES_TYPES.USERS_MICROSERVICE, 'users_queue'),
 				getClientsModuleRabbitMqProvider(MICROSERVICES_TYPES.MEETUPS_MICROSERVICE, 'meetups_queue'),
 			],
 		}),
 
 		ConfigModule.forRoot({
 			isGlobal: true,
-			load: [jwtConfigRegister, appConfigRegister, rabbitmqConfigRegister, googleConfigRegister],
+			load: [
+				jwtConfigRegister,
+				appConfigRegister,
+				rabbitmqConfigRegister,
+				googleConfigRegister,
+				encryptionConfigRegister,
+			],
 		}),
 		UsersModule,
 		RolesModule,

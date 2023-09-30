@@ -8,14 +8,16 @@ import type { CreateRoleDto } from './dto/create-role.dto';
 
 @Injectable()
 export class RolesService {
-	constructor(@Inject(MICROSERVICES_TYPES.AUTH_MICROSERVICE) private readonly authMicroserviceClient: ClientProxy) {}
+	constructor(
+		@Inject(MICROSERVICES_TYPES.USERS_MICROSERVICE) private readonly usersMicroserviceClient: ClientProxy,
+	) {}
 
 	async createRole(dto: CreateRoleDto) {
-		return await firstValueFrom(this.authMicroserviceClient.send('roles/create', dto));
+		return await firstValueFrom(this.usersMicroserviceClient.send('roles/create', dto));
 	}
 
 	async getRoleByValue(value: string) {
-		const role = await firstValueFrom(this.authMicroserviceClient.send('roles/getByValue', { value }));
+		const role = await firstValueFrom(this.usersMicroserviceClient.send('roles/getByValue', { value }));
 
 		if (!role) throw new NotFoundException();
 

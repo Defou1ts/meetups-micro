@@ -18,7 +18,7 @@ async function bootstrap() {
 					port: Number(process.env.RABBIT_MQ_PORT),
 				},
 			],
-			queue: 'auth_queue',
+			queue: 'users_queue',
 			queueOptions: {
 				durable: false,
 			},

@@ -35,6 +35,6 @@ export class JwtAuthController {
 	@HttpCode(200)
 	@Post('/updateAccess')
 	async updateAccess(@UserParam() user) {
-		return await this.jwtAuthService.updateAccess(user.email);
+		return await this.jwtAuthService.getNewAccessAndRefreshToken(user.email);
 	}
 }

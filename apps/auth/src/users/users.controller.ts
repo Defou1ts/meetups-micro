@@ -28,4 +28,12 @@ export class UsersController {
 	async setRole(@Payload() dto: SetRoleDto) {
 		return await this.usersService.setRole(dto);
 	}
+
+	@MessagePattern('users/updateRefresh')
+	async updateUserRefreshTokenByEmail(
+		@Payload('refreshToken') refreshToken: string,
+		@Payload('email') email: string,
+	) {
+		await this.usersService.updateUserRefreshTokenByEmail(email, refreshToken);
+	}
 }

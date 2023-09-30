@@ -6,9 +6,6 @@ import { APP_FILTER } from '@nestjs/core';
 import { Meetup, MeetupTags, Role, Tag, User, UserMeetups } from '@models';
 
 import { postgresConfigRegister } from './config/postgres.config';
-import { jwtConfigRegister } from './config/jwt.config';
-import { encryptionConfigRegister } from './config/encryption.config';
-import { JwtAuthModule } from './auth/jwt-auth.module';
 import { RolesModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
 import { HttpExceptionFilter } from './exceptions/rpc.exception.filter';
@@ -19,7 +16,7 @@ import type { PostgresConfig } from './config/postgres.config';
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
-			load: [postgresConfigRegister, jwtConfigRegister, encryptionConfigRegister],
+			load: [postgresConfigRegister],
 		}),
 		SequelizeModule.forRootAsync({
 			inject: [postgresConfigRegister.KEY],
@@ -36,7 +33,6 @@ import type { PostgresConfig } from './config/postgres.config';
 		}),
 		UsersModule,
 		RolesModule,
-		JwtAuthModule,
 	],
 	controllers: [],
 	providers: [

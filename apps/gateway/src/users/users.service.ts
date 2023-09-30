@@ -9,21 +9,27 @@ import type { SetRoleDto } from './dto/set-role.dto';
 
 @Injectable()
 export class UsersService {
-	constructor(@Inject(MICROSERVICES_TYPES.AUTH_MICROSERVICE) private readonly authMicroserviceClient: ClientProxy) {}
+	constructor(
+		@Inject(MICROSERVICES_TYPES.USERS_MICROSERVICE) private readonly usersMicroserviceClient: ClientProxy,
+	) {}
 
 	async createUser(dto: CreateUserDto) {
-		return await firstValueFrom(this.authMicroserviceClient.send('users/create', dto));
+		return await firstValueFrom(this.usersMicroserviceClient.send('users/create', dto));
 	}
 
 	async getAllUsers() {
-		return await firstValueFrom(this.authMicroserviceClient.send('users/getAll', {}));
+		return await firstValueFrom(this.usersMicroserviceClient.send('users/getAll', {}));
 	}
 
 	async getUserByEmail(email: string) {
-		return await firstValueFrom(this.authMicroserviceClient.send('users/getByEmail', { email }));
+		return await firstValueFrom(this.usersMicroserviceClient.send('users/getByEmail', { email }));
 	}
 
 	async setRole(dto: SetRoleDto) {
-		return await firstValueFrom(this.authMicroserviceClient.send('users/setRole', dto));
+		return await firstValueFrom(this.usersMicroserviceClient.send('users/setRole', dto));
+	}
+
+	async updateUserRefreshTokenByEmail(refreshToken: string, email: string) {
+		return await firstValueFrom(this.usersMicroserviceClient.send('users/updateRefresh', { refreshToken, email }));
 	}
 }
