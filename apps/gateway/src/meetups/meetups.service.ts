@@ -2,13 +2,14 @@ import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom, map } from 'rxjs';
 
+import { MeetupQueryValueType } from './constants/sorts';
+
 import { MICROSERVICES_TYPES } from '../services.types';
 
 import type { SignUserToMeetupDto } from './dto/sign-user-to-meetup.dto';
 import type { AddTagDto } from './dto/add-tag.dto';
 import type { UpdateMeetupDto } from './dto/update-meetup.dto';
 import type { CreateMeetupDto } from './dto/create-meetup.dto';
-import type { MeetupQueryValueType } from './constants/sorts';
 
 @Injectable()
 export class MeetupsService {
@@ -24,7 +25,7 @@ export class MeetupsService {
 		name: string | undefined,
 		take: number = 10,
 		skip: number = 0,
-		sortBy: MeetupQueryValueType = 'ascending',
+		sortBy: MeetupQueryValueType = MeetupQueryValueType.ASCENDING,
 		latitude?: number,
 		longitude?: number,
 	) {

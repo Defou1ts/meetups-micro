@@ -1,4 +1,7 @@
-export type MeetupQueryValueType = 'ascending' | 'descending';
+export enum MeetupQueryValueType {
+	ASCENDING = 'ascending',
+	DESCENDING = 'descending',
+}
 export type MeetupSortType = 'ASC' | 'DESC';
 
 export const meetupSortTypes: Record<MeetupQueryValueType, MeetupSortType> = {

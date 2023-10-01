@@ -5,6 +5,7 @@ import {
 	Get,
 	Header,
 	Param,
+	ParseEnumPipe,
 	ParseIntPipe,
 	Patch,
 	Post,
@@ -50,11 +51,11 @@ export class MeetupsController {
 	@Get()
 	async getAll(
 		@Query('name') name: string,
-		@Query('take') take: number,
-		@Query('skip') skip: number,
-		@Query('sort_by') sortBy: MeetupQueryValueType,
-		@Query('latitude') latitude: number,
-		@Query('longitude') longitude: number,
+		@Query('take', new ParseIntPipe()) take: number,
+		@Query('skip', new ParseIntPipe()) skip: number,
+		@Query('sort_by', new ParseEnumPipe(MeetupQueryValueType)) sortBy: MeetupQueryValueType,
+		@Query('latitude', new ParseIntPipe()) latitude: number,
+		@Query('longitude', new ParseIntPipe()) longitude: number,
 	) {
 		return await this.meetupsService.getAllMeetups(name, take, skip, sortBy, latitude, longitude);
 	}
