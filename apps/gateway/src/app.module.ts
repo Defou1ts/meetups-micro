@@ -15,6 +15,7 @@ import { getClientsModuleRabbitMqProvider } from './helpers/getClientsModuleRabb
 import { OauthModule } from './oauth/oauth.module';
 import { googleConfigRegister } from './config/google.config';
 import { encryptionConfigRegister } from './config/encryption.config';
+import { validate } from './config/env.validation';
 
 @Module({
 	imports: [
@@ -28,6 +29,7 @@ import { encryptionConfigRegister } from './config/encryption.config';
 
 		ConfigModule.forRoot({
 			isGlobal: true,
+			validate,
 			load: [
 				jwtConfigRegister,
 				appConfigRegister,

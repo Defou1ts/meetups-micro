@@ -11,12 +11,14 @@ import { CsvModule } from './csv/csv.module';
 import { HttpExceptionFilter } from './exceptions/rpc.exception.filter';
 import { MeetupsModule } from './meetups/meetups.module';
 import { TagsModule } from './tags/tags.module';
+import { validate } from './config/env.validation';
 
 import type { PostgresConfig } from './config/postgres.config';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({
+			validate,
 			isGlobal: true,
 			load: [postgresConfigRegister, elasticConfigRegister],
 		}),

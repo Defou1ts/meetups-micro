@@ -9,12 +9,14 @@ import { postgresConfigRegister } from './config/postgres.config';
 import { RolesModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
 import { HttpExceptionFilter } from './exceptions/rpc.exception.filter';
+import { validate } from './config/env.validation';
 
 import type { PostgresConfig } from './config/postgres.config';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({
+			validate,
 			isGlobal: true,
 			load: [postgresConfigRegister],
 		}),

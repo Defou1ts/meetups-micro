@@ -4,7 +4,8 @@ services:
     gateway-service:
         container_name: gateway-dev
         env_file:
-            - .env
+            - .env.root
+            - ./apps/gateway/.dev.env
         build:
             context: .
             dockerfile: ./apps/gateway/Dockerfile
@@ -28,7 +29,7 @@ services:
     users-service:
         container_name: users-dev
         env_file:
-            - .env
+            - .env.root
         build:
             context: .
             dockerfile: ./apps/users/Dockerfile
@@ -49,7 +50,7 @@ services:
     meetups-service:
         container_name: meetups-dev
         env_file:
-            - .env
+            - .env.root
         build:
             context: .
             dockerfile: ./apps/meetups/Dockerfile
@@ -71,7 +72,7 @@ services:
         container_name: postgres-dev
         hostname: '${POSTGRES_HOST}'
         env_file:
-            - .env
+            - .env.root
         image: postgres:14
         ports:
             - '${POSTGRES_PORT}:${POSTGRES_PORT}'
@@ -81,7 +82,7 @@ services:
     rabbit:
         container_name: rabbitmq-dev
         env_file:
-            - .env
+            - .env.root
         hostname: '${RABBIT_MQ_HOST}'
         image: lucifer8591/rabbitmq-server:3.7.17
         ports:
@@ -181,7 +182,7 @@ services:
         container_name: logstash
         image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
         env_file:
-            - .env
+            - .env.root
         volumes:
             - ./logstash-config.conf:/usr/share/logstash/pipeline/logstash.conf
             - ./postgresql-connector.jar:/usr/share/logstash/postgresql-connector.jar
