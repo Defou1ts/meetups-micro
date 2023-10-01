@@ -71,8 +71,7 @@ export class JwtAuthService {
 
 		const hashedRefreshToken = await bcrypt.hash(refreshToken, this.encryptionConfig.salt);
 
-		user.set('hashedRefreshToken', hashedRefreshToken);
-		await user.save();
+		await this.userService.updateUserRefreshTokenByEmail(hashedRefreshToken, email);
 
 		return {
 			accessToken,

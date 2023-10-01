@@ -23,7 +23,6 @@ services:
             context: .
             dockerfile: ./apps/users/Dockerfile
             target: production
-        ports:
         depends_on:
             - postgres
             - rabbit

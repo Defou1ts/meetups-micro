@@ -30,6 +30,6 @@ export class UsersService {
 	}
 
 	async updateUserRefreshTokenByEmail(refreshToken: string, email: string) {
-		return await firstValueFrom(this.usersMicroserviceClient.send('users/updateRefresh', { refreshToken, email }));
+		this.usersMicroserviceClient.send('users/updateRefresh', { refreshToken, email });
 	}
 }
