@@ -1,0 +1,22 @@
+🎉 Meetups service
+
+## Environment:
+
+### .dev.env && .env example:
+
+```
+POSTGRES_HOST=postgres
+POSTGRES_USER=postgres
+POSTGRES_DB=meetups
+POSTGRES_PASSWORD=root
+POSTGRES_PORT=5432
+
+ELASTIC_HOST_FIRST_NODE=es01
+ELASTIC_HOST_SECOND_NODE=es02
+ELASTIC_HOST_THIRD_NODE=es03
+
+ELASTIC_USERNAME=kibana_system
+ELASTIC_PASSWORD=changeme
+ELASTIC_PORT=9200
+
+```

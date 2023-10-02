@@ -4,7 +4,7 @@ services:
     gateway-service:
         container_name: gateway-dev
         env_file:
-            - .env.root
+            - .env.root.dev
             - ./apps/gateway/.dev.env
         build:
             context: .
@@ -29,7 +29,8 @@ services:
     users-service:
         container_name: users-dev
         env_file:
-            - .env.root
+            - .env.root.dev
+            - ./apps/users/.dev.env
         build:
             context: .
             dockerfile: ./apps/users/Dockerfile
@@ -50,7 +51,8 @@ services:
     meetups-service:
         container_name: meetups-dev
         env_file:
-            - .env.root
+            - .env.root.dev
+            - ./apps/meetups/.dev.env
         build:
             context: .
             dockerfile: ./apps/meetups/Dockerfile
@@ -90,6 +92,11 @@ services:
             - '15672:15672'
         volumes:
             - rabbitmq:/var/lib/rabbitmq
+        healthcheck:
+            test: ['CMD', 'curl', '-f', 'http://${HOST}:15672']
+            interval: 30s
+            timeout: 10s
+            retries: 5
         restart: always
 
     es01:
@@ -182,7 +189,7 @@ services:
         container_name: logstash
         image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
         env_file:
-            - .env.root
+            - .env.dev
         volumes:
             - ./logstash-config.conf:/usr/share/logstash/pipeline/logstash.conf
             - ./postgresql-connector.jar:/usr/share/logstash/postgresql-connector.jar
