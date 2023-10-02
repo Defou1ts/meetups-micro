@@ -56,11 +56,12 @@ RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{defa
 
 ```
 
--   Configure environment for each microservice.
+### Configure environment for each microservice.
 -   https://github.com/Defou1ts/meetups-micro/tree/main/apps/gateway/README.md
 -   https://github.com/Defou1ts/meetups-micro/tree/main/apps/meetups/README.md
 -   https://github.com/Defou1ts/meetups-micro/tree/main/apps/users/README.md
--   Start production or development docker-compose file with folowwing command:
+
+### Start production or development docker-compose file with folowwing command:
 
 ```
 $ yarn start:dev
